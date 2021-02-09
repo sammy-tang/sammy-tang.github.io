@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C语言," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="哈希表（Hash Table，也叫散列表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做哈希函数，存放记录的数组称做哈希表。哈希表相关定义如下： typedef enum{     HASH_OK,     HASH_ERROR,     HASH_ADDED,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哈希表添加（C语言）">
+<meta property="og:url" content="http://sammy-tang.github.io/2020/06/14/%E5%93%88%E5%B8%8C%E8%A1%A8%E6%B7%BB%E5%8A%A0%EF%BC%88C%E8%AF%AD%E8%A8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="Sammy-tang">
+<meta property="og:description" content="哈希表（Hash Table，也叫散列表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做哈希函数，存放记录的数组称做哈希表。哈希表相关定义如下： typedef enum{     HASH_OK,     HASH_ERROR,     HASH_ADDED,">
+<meta property="article:published_time" content="2020-06-14T03:49:11.000Z">
+<meta property="article:modified_time" content="2021-02-09T12:39:07.719Z">
+<meta property="article:author" content="akutagawa">
+<meta property="article:tag" content="C语言">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://sammy-tang.github.io/2020/06/14/哈希表添加（C语言）/"/>
+
+
+
+
+
+  <title>哈希表添加（C语言） | Sammy-tang</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sammy-tang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sammy-tang.github.io/2020/06/14/%E5%93%88%E5%B8%8C%E8%A1%A8%E6%B7%BB%E5%8A%A0%EF%BC%88C%E8%AF%AD%E8%A8%80%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="akutagawa">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sammy-tang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">哈希表添加（C语言）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-14T11:49:11+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>哈希表（Hash Table，也叫散列表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做哈希函数，存放记录的数组称做哈希表。哈希表相关定义如下：</p>
+<pre class=" language-javascript"><code class="language-javascript">typedef <span class="token keyword">enum</span><span class="token punctuation">{</span>
+    HASH_OK<span class="token punctuation">,</span>
+    HASH_ERROR<span class="token punctuation">,</span>
+    HASH_ADDED<span class="token punctuation">,</span>
+    HASH_REPLACED_VALUE<span class="token punctuation">,</span>
+    HASH_ALREADY_ADDED<span class="token punctuation">,</span>
+    HASH_DELETED<span class="token punctuation">,</span>
+    HASH_NOT_FOUND<span class="token punctuation">,</span>
+<span class="token punctuation">}</span> HASH_RESULT<span class="token punctuation">;</span>
+
+typedef struct __HashEntry HashEntry<span class="token punctuation">;</span>
+struct __HashEntry<span class="token punctuation">{</span>
+    union<span class="token punctuation">{</span>
+        char  <span class="token operator">*</span>str_value<span class="token punctuation">;</span>
+        double dbl_value<span class="token punctuation">;</span>
+        int       int_value<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> key<span class="token punctuation">;</span>
+    union<span class="token punctuation">{</span>
+        char  <span class="token operator">*</span>str_value<span class="token punctuation">;</span>
+        double dbl_value<span class="token punctuation">;</span>
+        int       int_value<span class="token punctuation">;</span>
+        long   long_value<span class="token punctuation">;</span>
+        <span class="token keyword">void</span>  <span class="token operator">*</span>ptr_value<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> value<span class="token punctuation">;</span>
+    HashEntry <span class="token operator">*</span>next<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+struct __HashTable<span class="token punctuation">{</span>
+    HashEntry <span class="token operator">**</span>bucket<span class="token punctuation">;</span>        
+    int size<span class="token punctuation">;</span>
+    HASH_RESULT last_error<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+typedef struct __HashTable HashTable<span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 向哈希表中添加元素，其中键类型为char*， 元素类型为int。</span>
+HASH_RESULT <span class="token function">hash_add_int</span><span class="token punctuation">(</span>HashTable <span class="token operator">*</span> table<span class="token punctuation">,</span> <span class="token keyword">const</span> char <span class="token operator">*</span> key<span class="token punctuation">,</span> int value<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>哈希表相关说明：<br>HASH_RESULT 类型为相关函数的返回类型<br>HashEntry 为哈希表所保存元素（即键值对 《key, value》）类型<br>HashTable 为哈希表，其中 bucket 指向大小为size的、元素类型为 HashEntry<em>的指针数组<br>哈希表采用链地址法处理冲突<br>请实现 hash_add_int 函数，向哈希表中添加元素，其中键类型为char</em>， 元素类型为int。在添加过程中，如果要添加的键值key已在哈希表中，且对应的值value也已存在，则函数返回 HASH_ALREADY_ADDED；如果要添加的键值key已在哈希表中，但对应的值value不同，则函数将value值更新到哈希表中，之后返回 HASH_REPLACED_VALUE；如果要添加的键值key不在哈希表中，则函数创建 HashEntry 类型，并将其加入到哈希表中，且函数返回 HASH_ADDED。本题所用的哈希函数如下：</p>
+<pre class=" language-javascript"><code class="language-javascript">long <span class="token function">hash_string</span><span class="token punctuation">(</span><span class="token keyword">const</span> char <span class="token operator">*</span>str<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    long hash <span class="token operator">=</span> <span class="token number">5381</span><span class="token punctuation">;</span>
+    int c<span class="token punctuation">;</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>c <span class="token operator">=</span> <span class="token operator">*</span>str<span class="token operator">++</span><span class="token punctuation">)</span>
+        hash <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>hash <span class="token operator">&lt;</span><span class="token operator">&lt;</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> hash<span class="token punctuation">)</span> <span class="token operator">+</span> c<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">/* hash * 33 + c */</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>hash <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        hash <span class="token operator">*</span><span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> hash<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>答案如下：</p>
+<pre class=" language-javascript"><code class="language-javascript">#include <span class="token operator">&lt;</span>string<span class="token punctuation">.</span>h<span class="token operator">></span>
+
+int <span class="token function">Find</span><span class="token punctuation">(</span>HashTable<span class="token operator">*</span> table<span class="token punctuation">,</span> <span class="token keyword">const</span> char<span class="token operator">*</span> key<span class="token punctuation">,</span> int value<span class="token punctuation">,</span> long keyhash<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    HashEntry<span class="token operator">*</span> Head <span class="token operator">=</span> table<span class="token operator">-</span><span class="token operator">></span>bucket<span class="token punctuation">[</span>keyhash<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>Head <span class="token operator">&amp;&amp;</span> <span class="token function">strcmp</span><span class="token punctuation">(</span>Head<span class="token operator">-</span><span class="token operator">></span>key<span class="token punctuation">.</span>str_value<span class="token punctuation">,</span> key<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Head <span class="token operator">=</span> Head<span class="token operator">-</span><span class="token operator">></span>next<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>Head<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>Head<span class="token operator">-</span><span class="token operator">></span>value<span class="token punctuation">.</span>int_value <span class="token operator">==</span> value<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        Head<span class="token operator">-</span><span class="token operator">></span>value<span class="token punctuation">.</span>int_value <span class="token operator">=</span> value<span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+HASH_RESULT <span class="token function">hash_add_int</span><span class="token punctuation">(</span>HashTable<span class="token operator">*</span> table<span class="token punctuation">,</span> <span class="token keyword">const</span> char<span class="token operator">*</span> key<span class="token punctuation">,</span> int value<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    int p<span class="token punctuation">;</span>
+    long keyhash <span class="token operator">=</span> <span class="token function">hash_string</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token operator">%</span> table<span class="token operator">-</span><span class="token operator">></span>size<span class="token punctuation">;</span>
+    p <span class="token operator">=</span> <span class="token function">Find</span><span class="token punctuation">(</span>table<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> keyhash<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>p <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        HashEntry<span class="token operator">*</span> Node <span class="token operator">=</span> <span class="token punctuation">(</span>HashEntry<span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">malloc</span><span class="token punctuation">(</span><span class="token function">sizeof</span><span class="token punctuation">(</span>HashEntry<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>Node<span class="token punctuation">)</span>
+            <span class="token keyword">return</span> HASH_ERROR<span class="token punctuation">;</span>
+        Node<span class="token operator">-</span><span class="token operator">></span>key<span class="token punctuation">.</span>str_value <span class="token operator">=</span> <span class="token punctuation">(</span>char<span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">malloc</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>Node<span class="token operator">-</span><span class="token operator">></span>key<span class="token punctuation">.</span>str_value <span class="token operator">==</span> NULL<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> HASH_ERROR<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        Node<span class="token operator">-</span><span class="token operator">></span>key<span class="token punctuation">.</span>str_value <span class="token operator">=</span> <span class="token punctuation">(</span>char<span class="token operator">*</span><span class="token punctuation">)</span>key<span class="token punctuation">;</span>
+        Node<span class="token operator">-</span><span class="token operator">></span>value<span class="token punctuation">.</span>int_value <span class="token operator">=</span> value<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//Node->next = table->bucket[keyhash]; //？</span>
+        table<span class="token operator">-</span><span class="token operator">></span>bucket<span class="token punctuation">[</span>keyhash<span class="token punctuation">]</span> <span class="token operator">=</span> Node<span class="token punctuation">;</span>
+        <span class="token keyword">return</span> HASH_ADDED<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>p <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> HASH_REPLACED_VALUE<span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        <span class="token keyword">return</span> HASH_ALREADY_ADDED<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag"># C语言</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/14/%E5%93%88%E5%B8%8C%E8%A1%A8%E5%88%9B%E5%BB%BA%EF%BC%88C%E8%AF%AD%E8%A8%80%E5%88%86%E7%A6%BB%E9%93%BE%E6%8E%A5%E6%B3%95-%E9%93%BE%E5%9C%B0%E5%9D%80%E6%B3%95%EF%BC%89/" rel="next" title="哈希表创建（C语言分离链接法/链地址法）">
+                <i class="fa fa-chevron-left"></i> 哈希表创建（C语言分离链接法/链地址法）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/18/AVL%E6%B7%BB%E5%8A%A0%EF%BC%88C%E8%AF%AD%E8%A8%80%EF%BC%89/" rel="prev" title="AVL添加（C语言）">
+                AVL添加（C语言） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">akutagawa</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">akutagawa</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
